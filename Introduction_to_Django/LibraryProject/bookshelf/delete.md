@@ -1,8 +1,7 @@
 >>> from bookshelf.models import Book
->>> book = Book.objects.get(title="1984")
->>> book.title = "Nineteen Eighty-Four"
->>> book.save()
->>> book.title
-# Expected output: 'Nineteen Eighty-Four'
->>> Book.objects.get(pk=book.pk).title
-# Expected output: 'Nineteen Eighty-Four'
+>>> book = Book.objects.get(title="Nineteen Eighty-Four")
+>>> result = book.delete()
+>>> result
+# Expected output: (1, {'bookshelf.Book': 1})
+>>> list(Book.objects.all())
+# Expected output: []

@@ -1,6 +1,8 @@
 >>> from bookshelf.models import Book
->>> bk = Book.objects.get(title="1984")
->>> bk.title = "Nineteen Eighty-Four"
->>> bk.save()
->>> Book.objects.get(pk=bk.pk).title
+>>> book = Book.objects.get(title="1984")
+>>> book.title = "Nineteen Eighty-Four"
+>>> book.save()
+>>> book.title
 # Expected output: 'Nineteen Eighty-Four'
+>>> Book.objects.get(pk=book.pk).title
+# Expected output: 'Nineteen Eighty

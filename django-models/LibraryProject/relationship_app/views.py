@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic.detail import DetailView   # ✅ exact import required
-from .models import Book, Library   # ✅ includes Library import
+from django.views.generic import DetailView
+from .models import Book, Library   # ✅ includes "from .models import Library"
 
 # ---------------------------
 # Function-based View
@@ -8,7 +8,7 @@ from .models import Book, Library   # ✅ includes Library import
 def list_books(request):
     """Displays a list of all book titles and their authors."""
     books = Book.objects.all()
-    # ✅ make sure template path matches
+    # ✅ required explicit template path
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
 

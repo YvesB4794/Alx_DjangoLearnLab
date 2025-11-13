@@ -1,13 +1,15 @@
-# ...existing code...
 from django.contrib import admin
-from .models import Book
+from .models import Book, Bookshelf
 
+@admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'publication_year')
-    list_filter = ('author', 'publication_year')
+    list_display = ('id', 'title', 'author', 'added_by')
+    list_filter = ('author', 'added_by')
     search_fields = ('title', 'author')
-    ordering = ('title',)
-    list_per_page = 25
 
-admin.site.register(Book, BookAdmin)
-# ...existing code...
+
+@admin.register(Bookshelf)
+class BookshelfAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'owner')
+    list_filter = ('owner',)
+    search_fields = ('name',)

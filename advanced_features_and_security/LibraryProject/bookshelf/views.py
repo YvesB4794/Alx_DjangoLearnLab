@@ -1,3 +1,27 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Book, Bookshelf
 
-# Create your views here.
+@login_required
+def list_books(request):
+    books = Book.objects.filter(added_by=request.user)
+    return render(request, 'bookshelf/list_books.html', {'books': books})
+
+@login_required
+def create_book(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        author = request.POST.get("author")
+        Book.objects.create(
+            title=title,
+            author=author,
+            added_by=request.user
+        )
+        return redirect('list_books')
+    return render(request, 'bookshelf/create_book.html')
+
+
+@login_required
+def my_bookshelves(request):
+    shelves = Bookshelf.objects.filter(owner=request.user)
+    return render(request, "bookshelf/my_shelves.html", {"shelves": shelves})

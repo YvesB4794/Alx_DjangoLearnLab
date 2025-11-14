@@ -44,7 +44,9 @@ INSTALLED_APPS = [
 ]
 
 # Use the custom user model
-AUTH_USER_MODEL = 'accounts.CustomUser'
+'''AUTH_USER_MODEL = 'accounts.CustomUser'''
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
 
 
 MIDDLEWARE = [

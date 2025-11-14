@@ -40,13 +40,56 @@ SECURE_CONTENT_TYPE_NOSNIFF = True              # prevent MIME sniffing
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-# Optional but recommended in production:
-#SECURE_SSL_REDIRECT = os.environ.get('DJANGO_SECURE_SSL_REDIRECT', 'False') == 'True'
-#SECURE_HSTS_SECONDS = int(os.environ.get('DJANGO_HSTS_SECONDS', 0))  # e.g. 31536000 in prod
-#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-#SECURE_HSTS_PRELOAD = True
+# --- HTTPS / security-related settings (paste into settings.py) ---
 
-# If you use django-csp add it to middleware/apps below (see Step 4)
+# Debug controlled by env var. In production set DJANGO_DEBUG=False
+DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
+
+# Use environment var for allowed hosts in production
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+
+# Redirect all HTTP to HTTPS (enable in production)
+SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "False") == "True"
+
+# HSTS: tells browsers to only use HTTPS for this domain
+# Use a small value during rollout (e.g. 3600) then increase to 31536000 (1 year)
+SECURE_HSTS_SECONDS = int(os.environ.get("DJANGO_SECURE_HSTS_SECONDS", "0"))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", "True") == "True"
+SECURE_HSTS_PRELOAD = os.environ.get("DJANGO_SECURE_HSTS_PRELOAD", "True") == "True"
+
+# Cookies: only send cookies over HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False  # leaving False is common so client-side scripts can still access CSRF if needed
+
+
+# Common browser protections
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
+
+# If running behind a proxy/load balancer that terminates TLS (e.g. nginx or ELB)
+# instruct Django to trust the X-Forwarded-Proto header.
+# Only set this if you actually use a proxy that sets this header!
+# In production: os.environ['DJANGO_SECURE_PROXY_HEADER'] = 'HTTP_X_FORWARDED_PROTO'
+if os.environ.get("DJANGO_SECURE_PROXY_SSL_HEADER", "False") == "True":
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# --- end HTTPS/security settings ---
+
+
+
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": ("'self'",),
+        "img-src": ("'self'", "data:"),
+        "script-src": ("'self'",),
+        "style-src": ("'self'", "https://fonts.googleapis.com"),
+        "font-src": ("'self'", "https://fonts.gstatic.com"),
+    }
+}
+
+
 
 
 # -------------------------------------------------------------------
@@ -77,6 +120,7 @@ AUTH_USER_MODEL = 'bookshelf.CustomUser'
 MIDDLEWARE = [
     'LibraryProject.middleware.SimpleCSPMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'LibraryProject.middleware_security.SecurityHeadersMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -90,15 +134,6 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'LibraryProject.urls'
 
 
-CONTENT_SECURITY_POLICY = {
-    "DIRECTIVES": {
-        "default-src": ("'self'",),
-        "img-src": ("'self'", "data:"),
-        "script-src": ("'self'",),
-        "style-src": ("'self'", "https://fonts.googleapis.com"),
-        "font-src": ("'self'", "https://fonts.gstatic.com"),
-    }
-}
 
 
 # -------------------------------------------------------------------

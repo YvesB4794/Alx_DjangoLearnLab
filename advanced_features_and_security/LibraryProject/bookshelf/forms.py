@@ -1,6 +1,9 @@
-# bookshelf/forms.py
 from django import forms
 from .models import Book
+
+class ExampleForm(forms.Form):
+    name = forms.CharField(max_length=100)
+    email = forms.EmailField()
 
 class BookForm(forms.ModelForm):
     class Meta:
@@ -8,9 +11,8 @@ class BookForm(forms.ModelForm):
         fields = ['title', 'author']
 
 class BookSearchForm(forms.Form):
-    q = forms.CharField(required=False, max_length=200)
-
-    def clean_q(self):
-        q = self.cleaned_data.get('q', '')
-        # strip control characters, limit length — more rules as needed
-        return q.strip()
+    query = forms.CharField(
+        max_length=255,
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": "Search for a book"})
+    )

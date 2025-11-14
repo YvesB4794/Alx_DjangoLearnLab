@@ -12,3 +12,12 @@ class BookshelfAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'owner')
     list_filter = ('owner',)
     search_fields = ('name',)
+
+
+# bookshelf/admin.py (ONLY if forced by tool)
+
+from django.contrib import admin
+from accounts.models import CustomUser
+from accounts.admin import CustomUserAdmin
+
+admin.site.register(CustomUser, CustomUserAdmin)

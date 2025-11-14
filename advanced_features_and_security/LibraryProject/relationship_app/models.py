@@ -20,7 +20,13 @@ class Book(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
     library = models.ForeignKey(Library, on_delete=models.CASCADE)
     published_date = models.DateField(null=True, blank=True)
-    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='books_added', null=True, blank=True)
+    '''added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='books_added', null=True, blank=True)'''
+    added_by = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name='relationship_books_added'
+)
+
 
     class Meta:
         permissions = [

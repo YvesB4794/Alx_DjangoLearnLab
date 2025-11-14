@@ -25,6 +25,30 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# SECURITY: set via env in production
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-secret-key-for-local')
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
+
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+
+# --- Security hardening ---
+SECURE_BROWSER_XSS_FILTER = True                # enable browser XSS filter
+X_FRAME_OPTIONS = 'DENY'                        # prevent clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True              # prevent MIME sniffing
+
+# Cookies: enforce HTTPS in production
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Optional but recommended in production:
+#SECURE_SSL_REDIRECT = os.environ.get('DJANGO_SECURE_SSL_REDIRECT', 'False') == 'True'
+#SECURE_HSTS_SECONDS = int(os.environ.get('DJANGO_HSTS_SECONDS', 0))  # e.g. 31536000 in prod
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_HSTS_PRELOAD = True
+
+# If you use django-csp add it to middleware/apps below (see Step 4)
+
+
 # -------------------------------------------------------------------
 # APPLICATION DEFINITION
 # -------------------------------------------------------------------
@@ -41,6 +65,7 @@ INSTALLED_APPS = [
     'relationship_app',   # existing app
     'accounts',           # new app for custom user model
     'bookshelf',          # optional additional app (if used)
+    'csp',  # add to installed apps
 ]
 
 # Use the custom user model
@@ -50,6 +75,7 @@ AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 
 MIDDLEWARE = [
+    'LibraryProject.middleware.SimpleCSPMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,10 +83,22 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',  # early in middleware stack
 ]
 
 
 ROOT_URLCONF = 'LibraryProject.urls'
+
+
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": ("'self'",),
+        "img-src": ("'self'", "data:"),
+        "script-src": ("'self'",),
+        "style-src": ("'self'", "https://fonts.googleapis.com"),
+        "font-src": ("'self'", "https://fonts.gstatic.com"),
+    }
+}
 
 
 # -------------------------------------------------------------------

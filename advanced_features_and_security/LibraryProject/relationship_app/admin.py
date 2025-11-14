@@ -1,16 +1,20 @@
-# relationship_app/admin.py
 from django.contrib import admin
-from .models import Author, Book, Library, Librarian
-from .models import UserProfile
+from .models import Author, Library, Book, Librarian
 
-admin.site.register(Author)
-admin.site.register(Book)
-admin.site.register(Library)
-admin.site.register(Librarian)
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'age')
 
-# LibraryProject/relationship_app/admin.py
+@admin.register(Library)
+class LibraryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'location')
 
-@admin.register(UserProfile)
-class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'role')
-    list_select_related = ('user',)
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'author', 'library', 'published_date', 'added_by')
+    list_filter = ('author', 'library')
+    search_fields = ('title',)
+
+@admin.register(Librarian)
+class LibrarianAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'library')

@@ -7,7 +7,6 @@ class BookAdmin(admin.ModelAdmin):
     list_filter = ('author', 'added_by')
     search_fields = ('title', 'author')
 
-
 @admin.register(Bookshelf)
 class BookshelfAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'owner')

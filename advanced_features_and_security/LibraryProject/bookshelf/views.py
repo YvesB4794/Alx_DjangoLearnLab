@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Book, Bookshelf
 from django.contrib.auth.decorators import login_required, permission_required
 from .forms import BookForm, BookSearchForm, ExampleForm
+from .forms import ExampleForm
 from django.db.models import Q
 
 @login_required

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',   # <-- add this
     'api',              # <-- add this
+    'rest_framework.authtoken',    # token auth
 ]
 
 MIDDLEWARE = [
@@ -71,9 +72,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'api_project.wsgi.application'
 
 
+
+
+# REST framework configuration
 REST_FRAMEWORK = {
+
+
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+
+    # Authentication: token + session (session useful for browsable API in dev)
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    # Default permission: allow read-only for unauthenticated, write requires auth
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
 }
 
 

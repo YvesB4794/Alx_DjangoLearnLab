@@ -20,5 +20,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),  # <-- add this
+    path('api/', include('api.urls')),  # <-- this makes /api/books/ available
 ]
+

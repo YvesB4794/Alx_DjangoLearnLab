@@ -6,3 +6,5 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = ['id', 'title', 'author']
+        # include all fields - adjust if your Book model differs
+        fields = '__all__'

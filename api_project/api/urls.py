@@ -3,6 +3,7 @@ from django.urls import path
 from .views import BookListAPIView
 from rest_framework.routers import DefaultRouter
 from .views import BookViewSet
+from .views import BookList
 
 router = DefaultRouter()
 router.register(r'books', BookViewSet)
@@ -11,9 +12,8 @@ urlpatterns = router.urls
 
 urlpatterns = [
     path('books/', BookListAPIView.as_view(), name='api_books_list'),
+    path('books/', BookList.as_view(), name='book-list'),
 ]
-
-
 
 
 

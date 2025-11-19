@@ -8,3 +8,4 @@ class BookSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'author']
         # include all fields - adjust if your Book model differs
         fields = '__all__'
+

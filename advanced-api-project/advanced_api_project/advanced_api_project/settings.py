@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Local apps
-    'api',
+    #'api',
     # local apps
     'api.apps.ApiConfig',
 ]

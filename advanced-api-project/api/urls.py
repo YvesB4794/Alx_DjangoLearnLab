@@ -16,3 +16,4 @@ urlpatterns = [
     path('books/update/<int:pk>/', BookUpdateView.as_view(), name='book-update'),# PUT/PATCH
     path('books/delete/<int:pk>/', BookDeleteView.as_view(), name='book-delete') # DELETE
 ]
+

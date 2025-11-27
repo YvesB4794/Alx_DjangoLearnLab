@@ -37,10 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-        # Django REST Framework
+ # ... existing apps ...
     'rest_framework',
-
-    # Our App
+    'django_filters',   # <-- add this
     'api',
 ]
 
@@ -73,11 +72,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'advanced_api_project.wsgi.application'
 
-
+# Add or update REST_FRAMEWORK configuration
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend',
+    'DEFAULT_FILTER_BACKENDS': 
+
+                             # global default authentication/permission can remain as you set before
+
+                               ['django_filters.rest_framework.DjangoFilterBackend',
                                 'rest_framework.filters.SearchFilter',
-                                'rest_framework.filters.OrderingFilter'],
+                                'rest_framework.filters.OrderingFilter',
+                                'django_filters.rest_framework.DjangoFilterBackend',
+                                'rest_framework.filters.SearchFilter',
+                                'rest_framework.filters.OrderingFilter',
+                                ],
+                            # optionally set default pagination or permission classes here
 }
 
 

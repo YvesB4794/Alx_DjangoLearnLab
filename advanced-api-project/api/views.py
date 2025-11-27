@@ -18,6 +18,7 @@ from .models import Book
 from .serializers import BookSerializer
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .permissions import IsAdminOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 # List all books (GET /api/books/)
 class BookListView(generics.ListAPIView):
@@ -26,6 +27,7 @@ class BookListView(generics.ListAPIView):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'author__name']
     ordering_fields = ['publication_year', 'title']
+    permission_classes = [IsAuthenticatedOrReadOnly]  # Read allowed for all
     # Read is allowed for unauthenticated users (default), but global settings may apply
 
 
@@ -33,13 +35,14 @@ class BookListView(generics.ListAPIView):
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]  # Read allowed for all
 
 # Create a new book (POST /api/books/create/)
 
 class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         # Example: log or attach additional data before saving
@@ -50,11 +53,12 @@ class BookCreateView(generics.CreateAPIView):
 class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # require auth to update
+    permission_classes = [IsAuthenticated]  # require auth to update
 
 # Delete a book (DELETE /api/books/<pk>/delete/)
 class BookDeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 #    permission_classes = [IsAuthenticatedOrReadOnly]  # require auth to delete
-    permission_classes = [IsAdminOrReadOnly]   # only admin can delete
+#    permission_classes = [IsAdminOrReadOnly]   # only admin can delete
+    permission_classes = [IsAuthenticated]

@@ -1,23 +1,35 @@
+from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from api.models import Book, Author
 
 class BookAPITestCase(APITestCase):
-    """Unit Tests for Book CRUD + Filters + Search + Ordering"""
 
     def setUp(self):
+        # Create test user for authentication
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="testpassword123"
+        )
+
+        # Login user for authenticated requests
         self.client = APIClient()
+        self.client.login(username="testuser", password="testpassword123")   # <--- REQUIRED
 
-        # Create Author
-        self.author = Author.objects.create(name="Yves Test")
+        # Test separate DB (Django automatically isolates test database)
+        self.author = Author.objects.create(name="Author Test")
+        self.book1 = Book.objects.create(title="Book One", publication_year=2020, author=self.author)
+        self.book2 = Book.objects.create(title="Book Two", publication_year=2023, author=self.author)
 
-        # Create initial books
-        self.book1 = Book.objects.create(title="Python Basics", publication_year=2020, author=self.author)
-        self.book2 = Book.objects.create(title="Advanced Django", publication_year=2023, author=self.author)
-
-        self.list_url = reverse("book-list")  # from router
+        self.list_url = reverse("book-list")
         self.detail_url = reverse("book-detail", kwargs={"pk": self.book1.id})
+
+        
+def test_unauthenticated_access_fails(self):
+    self.client.logout()
+    response = self.client.get(self.list_url)
+    self.assertIn(response.status_code, [401, 403])  # depending on permissions config
 
     # ------------------ CRUD TESTS ------------------
 

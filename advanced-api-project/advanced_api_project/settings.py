@@ -40,6 +40,7 @@ INSTALLED_APPS = [
  # ... existing apps ...
     'rest_framework',
     'django_filters',   # <-- add this
+    'rest_framework.authtoken',   # required for token auth in tests
     'api',
 ]
 

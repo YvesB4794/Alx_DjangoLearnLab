@@ -1,7 +1,16 @@
-<h2>Your Profile</h2>
-
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Update</button>
-</form>
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+  <title>Profile</title>
+</head>
+<body>
+  <h2>Your Profile</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update</button>
+  </form>
+</body>
+</html>

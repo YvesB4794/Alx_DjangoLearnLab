@@ -3,10 +3,19 @@
 <html>
 <head>
   <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'blog/css/auth.css' %}">
+
   <title>Login</title>
 </head>
 <body>
   <h2>Login</h2>
+  <div class="auth-container">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+</div>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

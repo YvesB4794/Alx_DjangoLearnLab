@@ -1,3 +1,22 @@
+
+{% load static %}
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'blog/css/auth.css' %}">
+<script src="{% static 'blog/js/auth.js' %}"></script>
+
+<h2>Register</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Register</button>
+</form>
+{% endblock %}
+
+
+
 <!DOCTYPE html>
 <html lang="en">
   {% load static %}

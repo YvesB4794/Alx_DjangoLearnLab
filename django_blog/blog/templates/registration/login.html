@@ -1,26 +1,26 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+  <meta charset="utf-8">
+  <title>Login - My Django Blog</title>
   <link rel="stylesheet" href="{% static 'blog/css/auth.css' %}">
-
-  <title>Login</title>
 </head>
 <body>
-  <h2>Login</h2>
-  <div class="auth-container">
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
+  <div class="auth-wrapper">
+    <h1>Login</h1>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Login</button>
     </form>
-</div>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-  <p>Don't have an account? <a href="{% url 'blog:register' %}">Register</a></p>
+
+    <div class="auth-footer">
+      <p>Don't have an account? <a href="{% url 'blog:register' %}">Register</a></p>
+    </div>
+  </div>
+
+  <script src="{% static 'blog/js/auth.js' %}"></script>
 </body>
 </html>

@@ -1,24 +1,55 @@
+/* auth.css - login & register styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f6f6f8;
+  margin: 0;
+  padding: 0;
+  color: #222;
 }
 
-.auth-container {
-    width: 400px;
-    margin: 80px auto;
-    background: white;
-    padding: 25px;
-    border-radius: 6px;
+.auth-wrapper {
+  max-width: 460px;
+  margin: 70px auto;
+  background: #fff;
+  padding: 28px;
+  border-radius: 8px;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.06);
 }
 
-input, button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
+.auth-wrapper h1 {
+  margin: 0 0 12px;
+  color: #3a0ca3;
+  font-size: 1.6rem;
 }
 
-button {
-    background: purple;
-    color: white;
-    border: none;
+.auth-wrapper form p {
+  margin: 10px 0;
 }
+
+.auth-wrapper input[type="text"],
+.auth-wrapper input[type="email"],
+.auth-wrapper input[type="password"],
+.auth-wrapper button {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.auth-wrapper button {
+  background: #3a0ca3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 14px;
+}
+
+.auth-footer {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.auth-footer a { color: #3a0ca3; text-decoration: none; }

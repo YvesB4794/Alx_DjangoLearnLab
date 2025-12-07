@@ -23,4 +23,3 @@ urlpatterns = [
     path('', include('blog.urls')),  # homepage is blog post list
     path('accounts/', include('django.contrib.auth.urls')),  # login/logout
 ]
-

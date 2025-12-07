@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
@@ -16,9 +15,10 @@
         <a href="{% url 'blog:post_list' %}">My Django Blog</a>
     </h1>
 
+    <!-- ✅ AUTHENTICATION NAVIGATION -->
     <nav>
         {% if user.is_authenticated %}
-            Hello, {{ user.username }} |
+            <span>Welcome, {{ user.username }}</span> |
             <a href="{% url 'blog:profile' %}">Profile</a> |
             <a href="{% url 'blog:logout' %}">Logout</a>
         {% else %}

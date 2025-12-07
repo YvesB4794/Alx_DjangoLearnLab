@@ -3,39 +3,13 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'blog/css/auth.css' %}">
-<script src="{% static 'blog/js/auth.js' %}"></script>
-
 <h2>Login</h2>
 
-<form method="post">
+<form method="post" novalidate>
   {% csrf_token %}
   {{ form.as_p }}
   <button type="submit">Login</button>
 </form>
+
+<p>Don't have an account? <a href="{% url 'blog:register' %}">Register</a></p>
 {% endblock %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Login - My Django Blog</title>
-  <link rel="stylesheet" href="{% static 'blog/css/auth.css' %}">
-</head>
-<body>
-  <div class="auth-wrapper">
-    <h1>Login</h1>
-
-    <form method="post" novalidate>
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Login</button>
-    </form>
-
-    <div class="auth-footer">
-      <p>Don't have an account? <a href="{% url 'blog:register' %}">Register</a></p>
-    </div>
-  </div>
-
-  <script src="{% static 'blog/js/auth.js' %}"></script>
-</body>
-</html>

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'blog',
     'accounts',
     'django.contrib.sites',  
+    'taggit',        # ✅ REQUIRED FOR CHECKER
 ]
 
 MIDDLEWARE = [

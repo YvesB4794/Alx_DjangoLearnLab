@@ -21,6 +21,8 @@
             <span>Welcome, {{ user.username }}</span> |
             <a href="{% url 'blog:profile' %}">Profile</a> |
             <a href="{% url 'blog:logout' %}">Logout</a>
+             <a href="{% url 'blog:login' %}">Login</a> |
+            <a href="{% url 'blog:register' %}">Register</a>
         {% else %}
             <a href="{% url 'blog:login' %}">Login</a> |
             <a href="{% url 'blog:register' %}">Register</a>

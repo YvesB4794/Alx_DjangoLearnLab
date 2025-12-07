@@ -1,15 +1,22 @@
-{% load static %}
 {% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'blog/css/auth.css' %}">
-<h2>Register</h2>
 
-<form method="post" novalidate>
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Register</button>
-</form>
+<div class="auth-wrapper">
+  <h2>Create Account</h2>
 
-<p>Already registered? <a href="{% url 'blog:login' %}">Login</a></p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Register</button>
+  </form>
+
+  <div class="auth-footer">
+    <p>Already registered? <a href="{% url 'blog:login' %}">Login</a></p>
+  </div>
+</div>
 {% endblock %}

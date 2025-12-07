@@ -18,7 +18,7 @@
       <p>{{ post.content|truncatechars:150 }}</p>
       {% if user == post.author %}
         <small>
-          <a href="{% url 'blog:post_edit' post.pk %}">Edit</a> |
+          <a href="{% url 'blog:post_update' post.pk %}">Edit</a>|
           <a href="{% url 'blog:post_delete' post.pk %}">Delete</a>
         </small>
       {% endif %}

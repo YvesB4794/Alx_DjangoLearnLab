@@ -24,3 +24,31 @@ Commands:
 - python manage.py migrate
 - python manage.py createsuperuser
 - python manage.py runserver
+
+
+Comment system
+--------------
+Model: blog.models.Comment
+- post: FK -> Post (related_name='comments')
+- author: FK -> User
+- content: TextField
+- created_at: auto_now_add
+- updated_at: auto_now
+
+Forms:
+- blog.forms.CommentForm for create/edit
+  - content validated to be non-empty and <=2000 chars
+
+Views & URLs:
+- POST new comment (inline): POST to /post/<post_pk>/comment/new/ (login required)
+- Edit comment: /comment/<pk>/edit/ (only author)
+- Delete comment: /comment/<pk>/delete/ (only author)
+
+Templates:
+- Inline comments and create form are integrated into blog/templates/blog/post_detail.html
+- Edit and delete use blog/templates/blog/comment_form.html and comment_confirm_delete.html
+
+Testing:
+- Anonymous users can view comments.
+- Only authenticated users can post.
+- Only comment authors can edit or delete their own comments.

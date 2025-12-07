@@ -17,4 +17,11 @@ urlpatterns = [
     #path("profile/", profile_view, name="profile"),
     path('register/', accounts_views.register_view, name='register'),
     path('profile/', accounts_views.profile_view, name='profile'),
+    path('', views.PostListView.as_view(), name='post_list'),           # /posts/ as root
+    path('posts/', views.PostListView.as_view(), name='posts_list'),    # optional alias
+    path('posts/new/', views.PostCreateView.as_view(), name='post_new'), 
+    path('posts/<int:pk>/', views.PostDetailView.as_view(), name='post_detail'),
+    path('posts/<int:pk>/edit/', views.PostUpdateView.as_view(), name='post_edit'),
+    path('posts/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'),
+    # ... other urls (auth etc) ...
 ]

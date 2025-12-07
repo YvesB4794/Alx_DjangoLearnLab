@@ -8,8 +8,10 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .forms import PostForm
 from django.urls import reverse_lazy, reverse
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 from .forms import CommentForm
+from django.db.models import Q
+from django.views.generic import ListView
 
 
 def post_list(request):
@@ -81,6 +83,22 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         post = self.get_object()
         return post.author == self.request.user
 
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['tags'] = ', '.join([t.name for t in self.object.tags.all()])
+        return initial
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        tag_names = form.cleaned_data.get('tags', []) or []
+        tags_qs = []
+        for name in tag_names:
+            tag, created = Tag.objects.get_or_create(name=name)
+            tags_qs.append(tag)
+        self.object.tags.set(tags_qs)
+        return response
+    
+
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'blog/post_confirm_delete.html'
@@ -145,3 +163,59 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('blog:post_detail', kwargs={'pk': self.object.post.pk})
+
+
+# blog/views.py
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        response = super().form_valid(form)
+        # handle tags: form.cleaned_data['tags'] gives list of names
+        tag_names = form.cleaned_data.get('tags', []) or []
+        tags_qs = []
+        for name in tag_names:
+            tag, created = Tag.objects.get_or_create(name__iexact=name, defaults={'name': name})
+            # The get_or_create above uses name__iexact – Django doesn't support __iexact in get_or_create defaults,
+            # to be safe use:
+            # tag, created = Tag.objects.get_or_create(name=name)
+            tags_qs.append(tag)
+        self.object.tags.set(tags_qs)
+        return response
+
+
+class TagListView(ListView):
+    model = Post
+    template_name = 'blog/tag_posts.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        tag_name = self.kwargs.get('tag_name')
+        return Post.objects.filter(tags__name__iexact=tag_name).distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag_name'] = self.kwargs.get('tag_name')
+        return context
+
+class SearchResultsView(ListView):
+    model = Post
+    template_name = 'blog/search_results.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '').strip()
+        if not query:
+            return Post.objects.none()
+        # search title, content, and tag name (case-insensitive)
+        return Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()

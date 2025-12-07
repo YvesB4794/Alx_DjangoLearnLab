@@ -4,9 +4,27 @@
 <head>
     <meta charset="utf-8">
     <title>{% block title %}My Django Blog{% endblock %}</title>
-
     <!-- Main Site CSS -->
     <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+
+    <h1><a href="{% url 'blog:post_list' %}">My Django Blog</a></h1>
+
+  <nav>
+    {% if user.is_authenticated %}
+      <span>Welcome, {{ user.username }}</span> |
+      <a href="{% url 'blog:profile' %}">Profile</a> |
+      <a href="{% url 'blog:logout' %}">Logout</a>
+    {% else %}
+      <a href="{% url 'blog:login' %}">Login</a> |
+      <a href="{% url 'blog:register' %}">Register</a>
+    {% endif %}
+  </nav>
+
+  <form action="{% url 'blog:search' %}" method="get" style="display:inline;">
+    <input type="text" name="q" placeholder="Search posts..." value="{{ request.GET.q|default:'' }}">
+    <button type="submit">Search</button>
+  </form>
+
 </head>
 <body>
 

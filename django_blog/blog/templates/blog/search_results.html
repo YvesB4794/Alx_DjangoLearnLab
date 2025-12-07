@@ -1,0 +1,25 @@
+{% extends 'blog/base.html' %}
+{% block title %}Search results{% endblock %}
+
+{% block content %}
+<h2>Search results for "{{ request.GET.q }}"</h2>
+
+{% if posts %}
+  <ul>
+    {% for post in posts %}
+      <li>
+        <a href="{% url 'blog:post_detail' post.pk %}">{{ post.title }}</a>
+        by {{ post.author.username }} - {{ post.published_date|date:"M. j, Y" }}
+        <p>{{ post.content|truncatechars:150 }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+
+  {% if is_paginated %}
+    {% if page_obj.has_previous %}<a href="?q={{ request.GET.q }}&page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+    {% if page_obj.has_next %}<a href="?q={{ request.GET.q }}&page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+  {% endif %}
+{% else %}
+  <p>No posts matched your search.</p>
+{% endif %}
+{% endblock %}

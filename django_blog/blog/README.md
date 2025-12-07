@@ -52,3 +52,12 @@ Testing:
 - Anonymous users can view comments.
 - Only authenticated users can post.
 - Only comment authors can edit or delete their own comments.
+
+
+Tagging & Search
+----------------
+- Model: Tag (name)
+- Post.tags: ManyToManyField to Tag
+- Add tags when creating/editing posts (comma separated)
+- Click a tag name to see posts with that tag: /tag/<tag_name>/
+- Search across title, content and tags via header search: /search/?q=keyword

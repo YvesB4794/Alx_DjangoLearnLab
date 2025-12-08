@@ -1,18 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User   # ✅ REQUIRED IMPORT
+from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
-
-
-
-class Tag(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-
-    class Meta:
-        ordering = ['name']
-
-    def __str__(self):
-        return self.name
+from taggit.managers import TaggableManager
 
 
 class Post(models.Model):
@@ -21,7 +11,8 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     created_date = models.DateTimeField(auto_now_add=True)
     published_date = models.DateTimeField(default=timezone.now)
-    tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
+
+    tags = TaggableManager()  # ✅ taggit works here
 
     class Meta:
         ordering = ['-published_date']
@@ -32,10 +23,9 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('blog:post_detail', kwargs={'pk': self.pk})
 
-# --- existing Post model above ---
 
 class Comment(models.Model):
-    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -46,5 +36,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author} on {self.post}"
-
-

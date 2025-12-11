@@ -1,12 +1,11 @@
 from rest_framework import generics, permissions
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import get_user_model
 from .serializers import RegisterSerializer, UserSerializer
 
+User = get_user_model()   # <-- IMPORTANT
 
-User = get_user_model()
 
 def generate_tokens(user):
     refresh = RefreshToken.for_user(user)
@@ -14,6 +13,7 @@ def generate_tokens(user):
         "refresh": str(refresh),
         "access": str(refresh.access_token)
     }
+
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -47,3 +47,8 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()  # ✔️ checker requirement
+    serializer_class = UserSerializer

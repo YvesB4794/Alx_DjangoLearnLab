@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/accounts/', include('accounts.urls')),
     path('api/posts/', include('posts.urls')),   # <-- add this
     path('api/follows/', include('follows.urls')),
+    path('api/notifications/', include('notifications.urls')),
 ]

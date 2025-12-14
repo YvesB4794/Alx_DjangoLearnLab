@@ -6,14 +6,14 @@ from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
+from rest_framework import generics
+from django.shortcuts import get_object_or_404
+from .models import Post, Like
+from notifications.models import Notification
+from django.contrib.contenttypes.models import ContentType
 
-
-from rest_framework import generics, permissions
-from rest_framework.response import Response
+from rest_framework import generics
 from django.contrib.auth import get_user_model
-
-from .models import Post
-from .serializers import PostSerializer
 
 
 User = get_user_model()
@@ -81,3 +81,37 @@ class FeedView(generics.ListAPIView):
 # permissions.IsAuthenticated
 # following.all()
 # Post.objects.filter(author__in=following_users).order_by
+
+class LikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        user = request.user
+
+        like, created = Like.objects.get_or_create(user=user, post=post)
+
+        if not created:
+            return Response({"detail": "Post already liked"}, status=400)
+
+        # Create notification
+        Notification.objects.create(
+            recipient=post.author,
+            actor=user,
+            verb="liked your post",
+            target=post
+        )
+
+        return Response({"message": "Post liked"})
+
+
+class UnlikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        user = request.user
+
+        Like.objects.filter(user=user, post=post).delete()
+
+        return Response({"message": "Post unliked"})

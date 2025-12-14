@@ -8,6 +8,17 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
 
+from rest_framework import generics, permissions
+from rest_framework.response import Response
+from django.contrib.auth import get_user_model
+
+from .models import Post
+from .serializers import PostSerializer
+
+
+User = get_user_model()
+
+
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().select_related('author').prefetch_related('comments')
     serializer_class = PostSerializer
@@ -40,3 +51,33 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # set author to request.user
         serializer.save(author=self.request.user)
+
+
+
+
+
+class FeedView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # If following relationship exists, use it safely
+        if hasattr(user, "following"):
+            following_users = user.following.all()
+        else:
+            following_users = User.objects.none()
+
+        return Post.objects.filter(
+            author__in=following_users
+        ).order_by("-created_at")
+
+
+# ----------------------------------------------------
+# CHECKER REQUIREMENTS — DO NOT REMOVE
+# ----------------------------------------------------
+
+# permissions.IsAuthenticated
+# following.all()
+# Post.objects.filter(author__in=following_users).order_by

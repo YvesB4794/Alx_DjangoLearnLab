@@ -126,11 +126,34 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 #}
 
 
+#DATABASES = {
+#    'default': dj_database_url.config(
+#        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+#    )
+#}
+
+
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+        default='sqlite:///{}'.format(os.path.join(BASE_DIR, 'db.sqlite3')),
+        conn_max_age=600,
+        ssl_require=True
     )
 }
+
+
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#       'NAME': 'your_db_name',
+#        'USER': 'your_user',
+#        'PASSWORD': 'your_password',
+#        'HOST': 'localhost',
+#        'PORT': '5432',
+#    }
+#}
+
 
 
 
